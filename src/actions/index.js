@@ -1,5 +1,3 @@
-// import fetch from 'node-fetch';
-
 const url = 'https://www.reddit.com/.json';
 
 export const REQUEST_FEED = 'REQUEST_FEED';
@@ -19,26 +17,25 @@ export const receiveFeed = (data) => {
 	};
 };
 
-export const getFeed = () => {
-	return console.log('got that feed');
-};
+// function fetchFeed() {
+// 	return fetch(url);
+// }
 
-// export const getFeed = () => {
-// 	return (dispatch) => {
-// 		dispatch(requestFeed());
-// 		return fetch(url)
-// 		.then((res) => {
-// 			if (res.status >= 400) {
-// 				throw new Error('Bad request');
-// 			}
-// 			return res.json();
-// 		})
-// 		.then((data) => {
-// 			dispatch(receiveFeed(data))
-// 			console.log(data);
-// 		})
-// 		.catch((err) => {
-// 			throw new Error('Error fetching feed:', err);
-// 		});
-// 	};
-// };
+export const getFeed = () => {
+	return (dispatch) => {
+		dispatch(requestFeed());
+		return fetch(url)
+		.then((res) => {
+			if (res.status >= 400) {
+				throw new Error('Bad request');
+			}
+			return res.json();
+		})
+		.then((data) => {
+			dispatch(receiveFeed(data));
+		})
+		.catch((err) => {
+			throw new Error('Error fetching feed:', err);
+		});
+	};
+};

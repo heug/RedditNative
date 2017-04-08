@@ -8,7 +8,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getFeed } from '../../actions';
 
-function mapStateToProps(state) { return {feed: state.feed}; }
+function mapStateToProps(state) { 
+  return {feed: state.feed} 
+}
 function mapDispatchToProps(dispatch) { return bindActionCreators({getFeed: getFeed}, dispatch); }
 
 class Feed extends Component {
@@ -17,16 +19,29 @@ class Feed extends Component {
     this.state = {
       feed: null
     }
+    this.props.getFeed();
+  }
+
+  displayFeed() {
+    if (!this.props.feed) {
+      return (
+        <Text>No feed!</Text>
+      );
+    }
+    return (
+      <Text>{this.props.feed.kind}</Text>
+    );
   }
 
   render() {
     return (
       <View style={styles.container}>
+        {this.displayFeed()}
         <Text style={styles.welcome}>
           Hello world!
         </Text>
         <Text style={styles.instructions}>
-          To get started, edit index.ios.js
+          Oh yeah
         </Text>
         <Text style={styles.instructions}>
           Press Cmd+R to reload,{'\n'}
