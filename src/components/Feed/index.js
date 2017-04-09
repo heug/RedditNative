@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  ScrollView
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -25,18 +26,21 @@ class Feed extends Component {
   displayFeed() {
     if (!this.props.feed) {
       return (
-        <Text>No feed!</Text>
+        <Text>Loading feed...</Text>
       );
     }
     return (
-      <Text>{this.props.feed.kind}</Text>
+      this.props.feed.data.children.map((post) => {
+        return (
+          <Text>{ post.data.title + "\n" }</Text>
+        );
+      })
     );
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        {this.displayFeed()}
+      <ScrollView style={styles.container}>
         <Text style={styles.welcome}>
           Hello world!
         </Text>
@@ -47,7 +51,8 @@ class Feed extends Component {
           Press Cmd+R to reload,{'\n'}
           Cmd+D or shake for dev menu
         </Text>
-      </View>
+        {this.displayFeed()}
+      </ScrollView>
     );
   }
 }
@@ -55,9 +60,8 @@ class Feed extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    paddingTop: 20
   },
   welcome: {
     fontSize: 20,
