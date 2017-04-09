@@ -14,6 +14,6 @@ const FeedReducer = (state = {
 	} else {
 		return state;
 	}
-};
+}
 
 export default FeedReducer;

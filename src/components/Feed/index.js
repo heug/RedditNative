@@ -3,7 +3,11 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView
+  ScrollView,
+  ListView,
+  FlatList,
+  ListItem,
+  RefreshControl
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -18,9 +22,22 @@ class Feed extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      feed: null
+      feed: null,
+      refreshing: false
     }
     this.props.getFeed();
+  }
+
+  _onRefresh() {
+    this.setState({refreshing: true});
+    this.props.getFeed()
+    .then(() => {
+      this.setState({refreshing: false});
+    });
+  }
+
+  renderStory({item}) {
+    return <Text>{item.data.title}</Text>;
   }
 
   displayFeed() {
@@ -30,17 +47,24 @@ class Feed extends Component {
       );
     }
     return (
-      this.props.feed.data.children.map((post) => {
-        return (
-          <Text>{ post.data.title + "\n" }</Text>
-        );
-      })
+      <FlatList
+        data={this.props.feed.data.children}
+        renderItem={this.renderStory}
+      />
     );
   }
 
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView 
+        style={styles.container}
+        refreshControl={
+          <RefreshControl 
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh.bind(this)}
+          />
+        }
+      >
         <Text style={styles.welcome}>
           Hello world!
         </Text>
@@ -76,3 +100,8 @@ const styles = StyleSheet.create({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Feed);
+
+      // <ListView
+      //   dataSource={this.props.feed}
+      //   renderRow={(story) => <Text>{story}</Text>}
+      // />

@@ -8,18 +8,14 @@ export const requestFeed = () => {
 	return {
 		type: 'REQUEST_FEED'
 	};
-};
+}
 
 export const receiveFeed = (data) => {
 	return {
 		type: 'RECEIVE_FEED',
 		payload: data
 	};
-};
-
-// function fetchFeed() {
-// 	return fetch(url);
-// }
+}
 
 export const getFeed = () => {
 	return (dispatch) => {
@@ -38,4 +34,4 @@ export const getFeed = () => {
 			throw new Error('Error fetching feed:', err);
 		});
 	};
-};
+}
