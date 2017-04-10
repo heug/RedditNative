@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { getFeed } from '../../actions';
 
 function mapStateToProps(state) { 
-  return {feed: state.feed} 
+  return {feed: state.feed.data} 
 }
 function mapDispatchToProps(dispatch) { return bindActionCreators({getFeed: getFeed}, dispatch); }
 
@@ -24,6 +24,7 @@ class Feed extends Component {
     super(props);
     this.state = {
       feed: null,
+      post: null,
       refreshing: false
     }
     this.props.getFeed();
@@ -105,8 +106,3 @@ const styles = StyleSheet.create({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Feed);
-
-      // <ListView
-      //   dataSource={this.props.feed}
-      //   renderRow={(story) => <Text>{story}</Text>}
-      // />
