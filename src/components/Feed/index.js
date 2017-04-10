@@ -7,7 +7,8 @@ import {
   ListView,
   FlatList,
   ListItem,
-  RefreshControl
+  RefreshControl,
+  TouchableHighlight
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -37,7 +38,11 @@ class Feed extends Component {
   }
 
   renderStory({item}) {
-    return <Text>{item.data.title}</Text>;
+    return (
+      <TouchableHighlight>
+        <Text style={styles.searchRow}>{item.data.title}</Text>
+      </TouchableHighlight>
+    );
   }
 
   displayFeed() {
@@ -66,14 +71,7 @@ class Feed extends Component {
         }
       >
         <Text style={styles.welcome}>
-          Hello world!
-        </Text>
-        <Text style={styles.instructions}>
-          Oh yeah
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
+          Reddit Native
         </Text>
         {this.displayFeed()}
       </ScrollView>
@@ -97,6 +95,13 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  searchRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingTop: 20
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Feed);

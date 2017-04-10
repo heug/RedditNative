@@ -1,9 +1,5 @@
 const url = 'https://www.reddit.com/.json';
 
-export const REQUEST_FEED = 'REQUEST_FEED';
-export const RECEIVE_FEED = 'RECEIVE_FEED';
-export const GET_FEED = 'GET_FEED';
-
 export const requestFeed = () => {
 	return {
 		type: 'REQUEST_FEED'
