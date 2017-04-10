@@ -7,8 +7,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1",
-    "node-fetch": "^1.6.3",
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.2",
     "react-native-router-flux": "^3.38.0",
