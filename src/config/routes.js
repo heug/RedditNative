@@ -6,8 +6,8 @@ import Post from "../components/Post";
 const Routes = (props) => (
   <Router {...props}>
     <Scene key="root">
-      <Scene key="feed" component={Feed} title="Reddit Native Feed" initial={true}/>
-      <Scene key="post" component={Post} title="Reddit Native Post"/>
+      <Scene key="feed" component={Feed} title="News Feed" initial={true}/>
+      <Scene key="post" component={Post} title="Details"/>
     </Scene>
   </Router>
 );

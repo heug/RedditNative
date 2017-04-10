@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   Image,
   ScrollView,
-  ListView,
   FlatList,
-  ListItem,
   RefreshControl,
   TouchableHighlight
 } from 'react-native';
@@ -15,11 +12,44 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { getFeed } from '../../actions';
+import styles from './styles';
 
 function mapStateToProps(state) { 
   return {feed: state.feed.data} 
 }
-function mapDispatchToProps(dispatch) { return bindActionCreators({getFeed: getFeed}, dispatch); }
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({getFeed: getFeed}, dispatch);
+}
+
+function timeConverter(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + ' ' + month + ' ' + year + ' at ' + hour + ':' + min + ':' + sec ;
+  return time;
+}
+
+class SeparatorComponent extends Component {
+  render() {
+    return <View style={styles.separator} />;
+  }
+}
+
+class FooterComponent extends Component {
+  render() {
+    return (
+    <View>
+    <SeparatorComponent/>
+    <View style={styles.footer} />
+    </View>
+    );
+  }
+}
 
 class Feed extends Component {
   constructor(props) {
@@ -44,32 +74,27 @@ class Feed extends Component {
     });
   }
 
-  renderImage(img) {
-    return (
-      <Image source={{uri: img[0].url}}
-              style={{width: 50, height: 50}} />
-    );
-  }
-
   renderStory({item}) {
     const goToStory = () => Actions.post({item});
-    let image = null;
-    // if (item.data.preview.images.length) {
-    //   image = <Image source={{uri: item.data.preview.images[0].resolutions[0].url}}
-    //             style={{width: 50, height: 50}} />
-    // }
+    let image = <Image source={require('../../assets/snoo.png')} style={styles.image}/>;
+    if (item.data.preview) {
+      image = <Image source={{uri: item.data.preview.images[0].source.url}}
+                style={styles.image} />;
+    }
     return (
       <TouchableHighlight onPress={goToStory}>
-        <View>
-
-          <Text
-            style={styles.searchRow}
-          >{item.data.title}</Text>
-          <Text>{item.data.author}</Text>
-          <Text>{item.data.subreddit}</Text>
-          <Text>{item.data.score}</Text>
-          <Text>{item.data.created}</Text>
-          <Text>{item.data.domain}</Text>
+        <View style={styles.item}>
+          <View style={styles.headline}>
+            <View style={styles.imageBox}>{image}</View>
+            <View><Text style={styles.title}>{item.data.title} <Text style={styles.byline}>({item.data.domain})</Text></Text></View>
+          </View>
+          <View style={styles.subline}>
+            <View><Text style={styles.score}>{item.data.score}</Text></View>
+            <View style={styles.padLeft}>
+              <Text style={styles.byline}>submitted {timeConverter(item.data.created)}{"\n"}
+                by {item.data.author} to r/{item.data.subreddit}</Text>
+            </View>
+          </View>
         </View>
       </TouchableHighlight>
     );
@@ -86,6 +111,8 @@ class Feed extends Component {
         data={this.props.feed.data.children}
         renderItem={this.renderStory}
         keyExtractor={this._keyExtractor}
+        ItemSeparatorComponent={SeparatorComponent}
+        ListFooterComponent={FooterComponent}
       />
     );
   }
@@ -101,38 +128,10 @@ class Feed extends Component {
           />
         }
       >
-        <Text style={styles.welcome}>
-          Reddit Native
-        </Text>
         {this.displayFeed()}
       </ScrollView>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5FCFF',
-    paddingTop: 20
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  searchRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingTop: 20
-  }
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Feed);
