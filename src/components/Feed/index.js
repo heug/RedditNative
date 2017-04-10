@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
   ScrollView,
   ListView,
   FlatList,
@@ -12,6 +13,7 @@ import {
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 import { getFeed } from '../../actions';
 
 function mapStateToProps(state) { 
@@ -30,6 +32,10 @@ class Feed extends Component {
     this.props.getFeed();
   }
 
+  _keyExtractor(item, idx) {
+    return item.data.id;
+  }
+
   _onRefresh() {
     this.setState({refreshing: true});
     this.props.getFeed()
@@ -38,10 +44,33 @@ class Feed extends Component {
     });
   }
 
-  renderStory({item}) {
+  renderImage(img) {
     return (
-      <TouchableHighlight>
-        <Text style={styles.searchRow}>{item.data.title}</Text>
+      <Image source={{uri: img[0].url}}
+              style={{width: 50, height: 50}} />
+    );
+  }
+
+  renderStory({item}) {
+    const goToStory = () => Actions.post({item});
+    let image = null;
+    // if (item.data.preview.images.length) {
+    //   image = <Image source={{uri: item.data.preview.images[0].resolutions[0].url}}
+    //             style={{width: 50, height: 50}} />
+    // }
+    return (
+      <TouchableHighlight onPress={goToStory}>
+        <View>
+
+          <Text
+            style={styles.searchRow}
+          >{item.data.title}</Text>
+          <Text>{item.data.author}</Text>
+          <Text>{item.data.subreddit}</Text>
+          <Text>{item.data.score}</Text>
+          <Text>{item.data.created}</Text>
+          <Text>{item.data.domain}</Text>
+        </View>
       </TouchableHighlight>
     );
   }
@@ -56,6 +85,7 @@ class Feed extends Component {
       <FlatList
         data={this.props.feed.data.children}
         renderItem={this.renderStory}
+        keyExtractor={this._keyExtractor}
       />
     );
   }
